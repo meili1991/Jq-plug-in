@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        img {
+            vertical-align: middle;
+        }
+        ul {
+            list-style: none;
+        }
+        .box {
+            border: 5px solid #0099cc;
+            width: 500px;
+            height: 200px;
+            margin: 100px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        .lunbo {
+            position: absolute;
+            /*left: 0;*/
+            width: 1000%;
+        }
+        .lunbo li {
+            width: 500px;
+            height: 200px;
+            float: left;
+        }
+        .circle {
+            position: absolute;
+            left: 50%;
+            bottom: 10px;
+        }
+        .circle li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            background-color: green;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .circle .current {
+            background-color: red;
+        }
+        .left-arrow,.right-arrow {
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+            font: bolder 25px/30px "宋体";
+            width: 25px;
+            height: 30px;
+            background-color: red;
+            text-align: center;
+            cursor: pointer;
+            color: #fff;
+        }
+        .left-arrow {
+            left: 0;
+        }
+        .right-arrow {
+            right: 0;
+        }
+    </style>
+    <script src="JS/jquery-1.11.1.min.js"></script>
+    <script src="jq%20自定义插件.js"></script>
+    <script>
+        $(function(){
+            var imgWidth=$(".lunbo img").width(),
+                liNum=$(".lunbo img").length-2,
+                target=(-1)*imgWidth;//存放目标位置，也即是当前位置;
+            $(".lunbo").css("left",(-1)*imgWidth);
+            $(".circle").on("mouseenter","li",function(){
+                target=$(this).index()*(-1)*imgWidth+(-1)*imgWidth;//获取当前li对应的target
+                $(".lunbo").stop().animate({left:target},500);
+                $(this).addClass("current").siblings().removeClass("current");
+            })
+            $(".right-arrow").on("click",function(){
+                if(target==liNum*(-1)*imgWidth){
+                    target-=imgWidth;
+                    $(".lunbo").stop().animate({left:target},500,function(){
+                        $(".lunbo").css("left",(-1)*imgWidth);
+                    });//先正常滚动一个图片，然后一瞬间跳转到开头图片（可用.animate({left:(-1)*imgWidth},0)替代回调函数）
+                    target=(-1)*imgWidth;//将当前位置设置为开头
+                }else {
+                    target-=imgWidth;
+                    $(".lunbo").stop().animate({left:target},500)
+                };
+                $(".circle>li").removeClass("current").eq((target+imgWidth)/((-1)*imgWidth)).addClass("current");
+            });//(target+imgWidth)/((-1)*imgWidth)为当前li的index值
+            $(".left-arrow").on("click",function(){
+                if(target==(-1)*imgWidth){
+                    target=0;
+                    $(".lunbo").stop().animate({left:target},500).animate({left:liNum*(-1)*imgWidth},0);//先正常滚动一个图片，然后一瞬间跳转到结尾图片
+                    target=liNum*(-1)*imgWidth;//将当前位置设置为结尾
+                }else {
+                    target+=imgWidth;
+                    $(".lunbo").stop().animate({left:target},500)
+                };
+                $(".circle>li").removeClass("current").eq((target+imgWidth)/((-1)*imgWidth)).addClass("current");
+            })
+        })
+    </script>
+</head>
+<body>
+<div class="box">
+    <ul class="lunbo">
+        <li><a href=""><img src="images/05.JPG" alt="" width="100%" height="100%"></a></li>
+        <li><a href=""><img src="images/01.JPG" alt="" width="100%" height="100%"></a></li>
+        <li><a href=""><img src="images/02.JPG" alt="" width="100%" height="100%"></a></li>
+        <li><a href=""><img src="images/03.JPG" alt="" width="100%" height="100%"></a></li>
+        <li><a href=""><img src="images/04.JPG" alt="" width="100%" height="100%"></a></li>
+        <li><a href=""><img src="images/05.JPG" alt="" width="100%" height="100%"></a></li>
+        <li><a href=""><img src="images/01.JPG" alt="" width="100%" height="100%"></a></li>
+    </ul>
+    <ul class="circle">
+        <li class="current"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <span class="left-arrow"><</span>
+    <span class="right-arrow">></span>
+</div>
+</body>
+</html>
